@@ -803,8 +803,22 @@ class USBMonitor {
         
         Task { [weak self] in
             guard let self else { return }
-            let snapshot = await USBMonitorActor.shared.getDevices()
-            logSnapshotJSON(devices: snapshot)
+
+            let devices = await USBMonitorActor.shared.getDevices()
+
+            let systemSnapshot = buildSystemSnapshot(devices: devices)
+            let inventory = systemSnapshot.toInventorySnapshot()
+
+            do {
+                let api = HardwareAPI()
+
+                _ = try await api.postHardware(
+                    snapshot: inventory,
+                    to: "http://192.168.1.9:2023"
+                )
+            } catch {
+                print(error)
+            }
         }
         
         DispatchQueue.main.async { [weak self] in

@@ -132,7 +132,7 @@ public struct HardwareAPI {
                 throw APIError.badStatus(http.statusCode, data)
             }
 
-            print("✅ Logged successfully (status: \(http.statusCode))")
+            print("✅ Hardware data added successfully (status: \(http.statusCode))")
 
             return (
                 statusCode: http.statusCode,
